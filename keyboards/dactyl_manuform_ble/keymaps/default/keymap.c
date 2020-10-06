@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include "app_ble_func.h"
+#include "dactyl_manuform_ble.h"
 
 enum custom_keycodes {
     AD_WO_L = SAFE_RANGE, /* Start advertising without whitelist  */
@@ -44,10 +45,10 @@ enum custom_keycodes {
 extern keymap_config_t keymap_config;
 
 enum {
-  BASE=0,
-  META,
+  BASE = 0,
+  FN,
   SYMB,
-  CTRL,
+  KEYBOARD,
   ABS_MOUSE,
   GAME
 };
@@ -70,12 +71,34 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |      |      |      |      |~SYMB |~CTRL |Shift |   |Space |~META |      |      |      |      |      |
    * `------------------------------------------------'   `------------------------------------------------'
    */
+  /*
   [BASE] = LAYOUT( \
     KC_ESC,   KC_Q,    KC_W,   KC_E,    KC_R,             KC_T,          KC_RBRC,       KC_BSLS,    KC_Y,             KC_U,    KC_I,     KC_O,     KC_P,     KC_LBRC, \
     KC_TAB,   KC_A,    KC_S,   KC_D,    KC_F,             KC_G,          S(KC_8),       S(KC_9),    KC_H,             KC_J,    KC_K,     KC_L,     KC_SCLN,  KC_QUOT, \
     KC_LSFT,  KC_Z,    KC_X,   KC_C,    KC_V,             KC_B,          S(KC_RBRC),    S(KC_BSLS), KC_N,             KC_M,    KC_COMM,  KC_DOT,   KC_SLSH,  SFT_T(KC_RO), \
     KC_LCTRL, KC_LGUI, KC_APP, KC_LALT, LT(CTRL, KC_SPC), SFT_T(KC_SPC), SFT_T(KC_TAB), KC_BSPC,    LT(META, KC_ENT), KC_DELT, KC_PSCR,  TG(GAME), TG(SYMB), KC_JYEN \
   ),
+  */
+
+  [BASE] = LAYOUT( \
+    // left hand
+    KC_ESC,    KC_1,    KC_2,    KC_3,   KC_4,   KC_5,   KC_6,
+    KC_TAB,    KC_Q,    KC_W,    KC_E,   KC_R,   KC_T,   KC_LBRC,
+    KC_LCTL,   KC_A,    KC_S,    KC_D,   KC_F,   KC_G,   KC_EQL,
+    KC_LSFT,   KC_Z,    KC_X,    KC_C,   KC_V,   KC_B,
+    KC_CAPS,   KC_LGUI, KC_LALT,   KC_EQL,
+                                MO(FN), KC_SPC,
+                                KC_END, KC_HOME,
+                                MO(KEYBOARD), KC_EQL,
+          // right hand
+                      KC_7,    KC_8,    KC_9,    KC_0,     KC_MINS,  KC_EQL,   KC_GRV,
+                      KC_RBRC, KC_Y,    KC_U,    KC_I,     KC_O,     KC_P,     KC_BSLS,
+                  MO(KEYBOARD), KC_H,    KC_J,    KC_K,     KC_L,     KC_SCLN,  KC_QUOT,
+                                KC_N,    KC_M,    KC_COMM,  KC_DOT,   KC_SLSH,  MOD_RSFT,
+                                        KC_LEFT, KC_UP,    KC_DOWN,  KC_RGHT,
+          KC_BSPC, KC_ENT,
+          KC_PGUP, KC_PGDN,
+          KC_LCTL, MO(KEYBOARD)),
 
   /* META
    * ,------------------------------------------------.   ,------------------------------------------------.
@@ -89,13 +112,35 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |      |      |      |      |~SYMB |RCtrl |Shift |   |Space |~META |      |      |      |      |      |
    * `------------------------------------------------'   `------------------------------------------------'
    */
+  /*
   [META] = LAYOUT( \
     _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,             KC_7,    KC_8,    KC_9,  KC_0,    KC_MINS, KC_EQL,  _______, \
     _______, XXXXXXX, XXXXXXX, KC_MHEN, KC_HENK, XXXXXXX, _______,          _______, KC_LEFT, KC_DOWN, KC_UP, KC_RGHT, XXXXXXX, XXXXXXX, \
     _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,            KC_F7,   KC_F8,   KC_F9, KC_F10,  KC_F11,  KC_F12,  SFT_T(KC_RO), \
     _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, RESET, _______, _______, _______ \
   ),
+  */
+  [FN] = LAYOUT( \
+    // left hand
+   _______,   KC_F1,     KC_F2,      KC_F3,    KC_F4,     KC_F5,    KC_F6,
+   _______,   _______,   _______,    KC_UP,    _______,   _______,  _______,
+   _______,   _______,   KC_LEFT,    KC_DOWN,  KC_RGHT,   _______,  RESET,
+   _______,   _______,   _______,   _______,   _______,   _______,
+   KC_MSTP,   KC_MPLY,   KC_MPRV,   KC_MNXT,
+                               _______, _______,
+                               _______, _______,
+                               _______, _______,
+        // right hand
+                     KC_F7,     KC_F8,     KC_F9,     KC_F10,    KC_F11,    KC_F12,    _______,
+                     _______,   _______,   _______,   _______,   _______,   _______,   _______,
+                     _______,   _______,   _______,   _______,   _______,   _______,   _______,
+                                _______,   _______,   _______,   _______,   _______,   _______,
+                                                      _______,   _______,   _______,   _______,
+        KC_DEL, _______,
+        _______, _______,
+        _______, _______),
 
+ 
   /* SYMB
    * ,------------------------------------------------.   ,------------------------------------------------.
    * |   !  |   "  |   #  |   $  |   %  |   &  |  [   |   |  ]   |   '  |   (  |   )  |   ~  |   =  |  ~   |
@@ -108,12 +153,14 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |      |      |      |      |~SYMB |RCtrl |Shift |   |Space |~META |      |      |      |      |      |
    * `------------------------------------------------'   `------------------------------------------------'
    */
+  /*
   [SYMB] = LAYOUT( \
     S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5), S(KC_6), _______, _______, S(KC_7), S(KC_8), S(KC_9),    S(KC_0),   S(KC_MINS), S(KC_EQL), \
     _______, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  _______, _______, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX,   S(KC_SCLN), S(KC_QUOT), \
     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  _______, _______, XXXXXXX, XXXXXXX, S(KC_COMM), S(KC_DOT), S(KC_SLSH), S(KC_RO), \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,    _______,   _______,    _______ \
   ),
+  */
 
   /* GAME
    * ,------------------------------------------------.   ,------------------------------------------------.
@@ -127,6 +174,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    * |      |      |      |      |      |      |      |   |Space |      |      |      |      |      |      |
    * `------------------------------------------------'   `------------------------------------------------'
    */
+  /*
   [GAME] = LAYOUT( \
     KC_TAB,   KC_Q,    KC_W,   KC_E,    KC_R,   KC_T,   KC_RBRC,    KC_BSLS,    KC_Y,   KC_U,    KC_I,     KC_O,    KC_P,    KC_LBRC, \
     KC_LALT,  KC_A,    KC_S,   KC_D,    KC_F,   KC_G,   S(KC_8),    S(KC_9),    KC_H,   KC_J,    KC_K,     KC_L,    KC_SCLN, KC_QUOT, \
@@ -140,6 +188,26 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
    BATT_LV, DEL_ID1, XXXXXXX, XXXXXXX,  XXXXXXX, BLE_DIS,  BLE_EN,       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,  XXXXXXX, \
    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  _______, XXXXXXX,  XXXXXXX,      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX,  XXXXXXX  \
   ),
+  */
+  [KEYBOARD] = LAYOUT( \
+    // left hand
+   AD_WO_L,   ADV_ID0,   ADV_ID1,   ADV_ID2,   ADV_ID3,  ENT_SLP,  ENT_DFU,
+   _______,   DEL_ID0,   DEL_ID1,   DEL_ID2,  DEL_ID3,   USB_DIS,  USB_EN,
+   _______,   _______,   _______,   _______,  _______,   BLE_DIS,  BLE_EN,
+   BATT_LV,   _______,   _______,   _______,  ENT_DFU,   RESET,
+   _______,   _______,   _______,   _______,
+                               _______, _______,
+                               _______, _______,
+                               _______, _______,
+        // right hand
+                     ENT_DFU,   _______,   _______,   _______,   _______,   _______,   _______,
+                     _______,   _______,   _______,   _______,   _______,   _______,   _______,
+                     _______,   _______,   _______,   _______,   _______,   _______,   _______,
+                                _______,   _______,   _______,   _______,   _______,   _______,
+                                                      _______,   _______,   _______,   _______,
+        _______, _______,
+        _______, _______,
+        _______, _______),
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -200,7 +268,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       send_string(str);
       return false;
     case ENT_DFU:
-      bootloader_jump();
+      nrf_bootloader_jump();
       return false;
     }
   }

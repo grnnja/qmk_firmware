@@ -31,14 +31,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT_ID      0x0042
 #define DEVICE_VER      0x0100
 #define MANUFACTURER    grnnja
-#define PRODUCT         Dactyl Manuform
-#define DESCRIPTION     The Answer to the Ultimate Question of Life, the Universe, and at least Keyboards
+#define PRODUCT         Prem"'"s Dactyl Manuform
+#define DESCRIPTION     
 
 /* key matrix size */
-#define MATRIX_ROWS 8
+#define MATRIX_ROWS 12
 #define MATRIX_COLS 7
 
-#define DIODE_DIRECTION COL2ROW
+#define DIODE_DIRECTION ROW2COL
 
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
